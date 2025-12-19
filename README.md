@@ -10,12 +10,6 @@ An elegant, robust, and secure banking dashboard built for the modern web. This 
 
 ---
 
-## 📸 Preview
-> **Note:** Add a screenshot of your dashboard here to make the repo visually stunning!
-> `![Dashboard Screenshot](your_image_link_here)`
-
----
-
 ## 🚀 Core Functionalities
 
 | Feature | Description |
