@@ -1,7 +1,7 @@
 import streamlit as st
 from supabase import create_client, Client
 import random
-
+import time
 # ==========================================
 # 1. SUPABASE CONNECTION
 # ==========================================
@@ -118,3 +118,4 @@ elif choice == "Logout":
     supabase.auth.sign_out()
     st.session_state.user = None
     st.rerun()
+
