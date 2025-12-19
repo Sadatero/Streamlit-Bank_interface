@@ -12,14 +12,16 @@ supabase: Client = create_client(URL, KEY)
 
 st.set_page_config(page_title="Vivnovation Bank", layout="centered")
 
-# --- REFRESH LOGIC ---
-# We check if Supabase ALREADY has a user session active.
-# This prevents the "Invalid/Wait" feeling during transitions.
+# --- FIXED SESSION LOGIC ---
 if "user" not in st.session_state:
-    current_session = supabase.auth.get_user()
-    if current_session.user:
-        st.session_state.user = current_session.user
-    else:
+    try:
+        # Safely check if a user is already logged in
+        response = supabase.auth.get_user()
+        if response and hasattr(response, 'user') and response.user:
+            st.session_state.user = response.user
+        else:
+            st.session_state.user = None
+    except:
         st.session_state.user = None
 
 st.title("🏦 Vivnovation Bank System")
@@ -34,7 +36,7 @@ else:
 choice = st.sidebar.selectbox("Menu", menu)
 
 # ==========================================
-# 3. LOGIN MODULE (FIXED)
+# 3. LOGIN MODULE
 # ==========================================
 if choice == "Login":
     st.subheader("Customer Login")
@@ -43,20 +45,13 @@ if choice == "Login":
     
     if st.button("Login"):
         try:
-            # Step 1: Attempt authentication
             res = supabase.auth.sign_in_with_password({"email": email, "password": password})
-            
             if res.user:
-                # Step 2: Save user to state
                 st.session_state.user = res.user
-                st.success("Login Successful! Redirecting...")
-                
-                # Step 3: CRITICAL FIX - We force a rerun here.
-                # This makes the app immediately see the new session and switch to Dashboard.
-                st.rerun() 
+                st.success("Login Successful!")
+                st.rerun()
         except Exception as e:
-            # We only show "Invalid" if Supabase actually returns an error.
-            st.error("Invalid Email or Password. Please try again.")
+            st.error("Invalid Email or Password.")
 
 # ==========================================
 # 4. SIGNUP MODULE
@@ -69,21 +64,20 @@ elif choice == "Signup":
     if st.button("Register"):
         try:
             supabase.auth.sign_up({"email": email, "password": password})
-            st.success("Credentials saved! You can now switch to the Login page.")
+            st.success("Credentials saved! Now switch to Login.")
         except Exception as e:
             st.error(f"Signup failed: {e}")
 
 # ==========================================
-# 5. DASHBOARD (The Personal Interface)
+# 5. DASHBOARD
 # ==========================================
 elif choice == "Dashboard":
     if not st.session_state.user:
         st.warning("Please login first.")
     else:
         user_id = st.session_state.user.id
-        
-        # Check if profile exists
-        res = supabase.table("bank_accounts").select("*").eq("user_id", user_id).execute()
+        # We fetch only columns we are SURE exist: name, age, balance, account_number
+        res = supabase.table("bank_accounts").select("id, name, age, balance, account_number").eq("user_id", user_id).execute()
         
         if not res.data:
             st.subheader("📝 Complete Your Profile")
@@ -101,10 +95,9 @@ elif choice == "Dashboard":
                             "user_id": user_id, "name": name, "age": int(age), 
                             "account_number": auto_acc, "balance": balance
                         }).execute()
-                        st.success("Saved! Refreshing...")
+                        st.success("Profile Created!")
                         st.rerun()
         else:
-            # --- DISPLAY DASHBOARD ---
             user_info = res.data[0]
             st.subheader(f"Welcome, {user_info['name']}")
             st.metric("Total Balance", f"₹ {user_info['balance']}")
