@@ -1,4 +1,3 @@
-
 import streamlit as st
 from supabase import create_client, Client
 import random
@@ -12,11 +11,11 @@ supabase: Client = create_client(URL, KEY)
 
 st.set_page_config(page_title="Vivnovation Bank", layout="centered")
 
-# --- FIXED SESSION LOGIC ---
+# --- SAFE SESSION LOGIC ---
 if "user" not in st.session_state:
     try:
-        # Safely check if a user is already logged in
         response = supabase.auth.get_user()
+        # We use a safety check to avoid the 'NoneType' AttributeError
         if response and hasattr(response, 'user') and response.user:
             st.session_state.user = response.user
         else:
@@ -36,7 +35,7 @@ else:
 choice = st.sidebar.selectbox("Menu", menu)
 
 # ==========================================
-# 3. LOGIN MODULE
+# 3. LOGIN MODULE (With Balloons!)
 # ==========================================
 if choice == "Login":
     st.subheader("Customer Login")
@@ -48,7 +47,15 @@ if choice == "Login":
             res = supabase.auth.sign_in_with_password({"email": email, "password": password})
             if res.user:
                 st.session_state.user = res.user
-                st.success("Login Successful!")
+                
+                # --- CELEBRATION LOGIC ---
+                st.balloons() # This triggers the balloon animation
+                st.success("Login Successful! Welcome back.")
+                
+                # Give the user a moment to see the balloons before rerunning
+                import time
+                time.sleep(1) 
+                
                 st.rerun()
         except Exception as e:
             st.error("Invalid Email or Password.")
@@ -76,7 +83,6 @@ elif choice == "Dashboard":
         st.warning("Please login first.")
     else:
         user_id = st.session_state.user.id
-        # We fetch only columns we are SURE exist: name, age, balance, account_number
         res = supabase.table("bank_accounts").select("id, name, age, balance, account_number").eq("user_id", user_id).execute()
         
         if not res.data:
@@ -95,7 +101,9 @@ elif choice == "Dashboard":
                             "user_id": user_id, "name": name, "age": int(age), 
                             "account_number": auto_acc, "balance": balance
                         }).execute()
-                        st.success("Profile Created!")
+                        st.snow() # Bonus: Use snow when a new account is created!
+                        st.success("Profile Created Successfully!")
+                        time.sleep(1)
                         st.rerun()
         else:
             user_info = res.data[0]
